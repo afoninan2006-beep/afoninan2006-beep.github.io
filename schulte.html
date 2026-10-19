@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Таблиця Шульте</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="site-header"></div>
+
+  <main class="main">
+    <h1>Таблиця Шульте</h1>
+    <p>Знаходь і натискай числа по порядку, від 1 до останнього, якомога швидше. Гра тренує увагу, швидкість зору та периферичний зір.</p>
+
+    <div class="game-row">
+      <span class="game-row__label">Розмір таблиці:</span>
+      <div class="seg" id="sizes">
+        <button type="button" data-size="3">3×3</button>
+        <button type="button" data-size="4">4×4</button>
+        <button type="button" data-size="5" class="active">5×5</button>
+        <button type="button" data-size="6">6×6</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="stat__label">Шукай число</span><span class="stat__value" id="target">1</span></div>
+      <div class="stat"><span class="stat__label">Час</span><span class="stat__value" id="time">0.0 с</span></div>
+      <div class="stat"><span class="stat__label">Твій рекорд</span><span class="stat__value" id="best">—</span></div>
+    </div>
+
+    <div class="board-wrap">
+      <div class="board is-hidden" id="board"></div>
+      <button type="button" class="board__cover" id="cover">
+        <strong id="coverTitle">Натисни, щоб почати</strong>
+        <span id="coverSub">Числа з'являться, і одразу піде час</span>
+      </button>
+    </div>
+
+    <button type="button" class="btn-game" id="restart">Заново</button>
+
+    <p class="note">Підказка: дивись в центр таблиці й намагайся помічати числа боковим зором, а не шукати їх по черзі очима.</p>
+  </main>
+
+  <script src="menu.js"></script>
+  <script>
+    (function () {
+      var board = document.getElementById("board");
+      var cover = document.getElementById("cover");
+      var coverTitle = document.getElementById("coverTitle");
+      var coverSub = document.getElementById("coverSub");
+      var targetEl = document.getElementById("target");
+      var timeEl = document.getElementById("time");
+      var bestEl = document.getElementById("best");
+      var sizeButtons = document.querySelectorAll("#sizes button");
+
+      var FONT = { 3: 36, 4: 32, 5: 28, 6: 24 };
+      var size = 5, total = 25, next = 1;
+      var state = "ready"; // ready | play | finished
+      var startTime = 0, timer = null;
+
+      function fmt(ms) { return (ms / 1000).toFixed(1) + " с"; }
+
+      function getBest() {
+        try { var v = localStorage.getItem("schulte-best-" + size); return v ? parseFloat(v) : null; }
+        catch (e) { return null; }
+      }
+      function setBest(ms) {
+        try { localStorage.setItem("schulte-best-" + size, String(ms)); } catch (e) {}
+      }
+      function showBest() {
+        var b = getBest();
+        bestEl.textContent = b === null ? "—" : fmt(b);
+      }
+
+      function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+        }
+        return arr;
+      }
+
+      function stopTimer() {
+        if (timer) { clearInterval(timer); timer = null; }
+      }
+
+      // нова гра: числа щоразу розкладаються випадково
+      function reset() {
+        stopTimer();
+        state = "ready";
+        next = 1;
+        total = size * size;
+
+        var numbers = [];
+        for (var i = 1; i <= total; i++) numbers.push(i);
+        shuffle(numbers);
+
+        board.innerHTML = "";
+        board.style.setProperty("--n", size);
+        board.style.setProperty("--fs", FONT[size]);
+        numbers.forEach(function (n) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "cell";
+          b.textContent = n;
+          b.dataset.n = n;
+          board.appendChild(b);
+        });
+        board.classList.add("is-hidden");
+
+        cover.hidden = false;
+        cover.classList.remove("finished");
+        coverTitle.textContent = "Натисни, щоб почати";
+        coverSub.textContent = "Числа з'являться, і одразу піде час";
+
+        targetEl.textContent = "1";
+        timeEl.textContent = "0.0 с";
+        showBest();
+      }
+
+      function start() {
+        state = "play";
+        cover.hidden = true;
+        board.classList.remove("is-hidden");
+        startTime = performance.now();
+        timer = setInterval(function () {
+          timeEl.textContent = fmt(performance.now() - startTime);
+        }, 100);
+      }
+
+      function finish() {
+        stopTimer();
+        state = "finished";
+        var result = performance.now() - startTime;
+        timeEl.textContent = fmt(result);
+
+        var best = getBest();
+        var isRecord = best === null || result < best;
+        if (isRecord) setBest(result);
+        showBest();
+
+        coverTitle.textContent = "Готово! " + fmt(result);
+        coverSub.textContent = (isRecord ? "Новий рекорд! " : "") + "Натисни, щоб зіграти ще";
+        cover.classList.add("finished");
+        cover.hidden = false;
+      }
+
+      board.addEventListener("click", function (event) {
+        var cell = event.target.closest(".cell");
+        if (!cell || state !== "play") return;
+
+        if (Number(cell.dataset.n) === next) {
+          cell.classList.add("done");
+          next++;
+          if (next > total) {
+            finish();
+          } else {
+            targetEl.textContent = next;
+          }
+        } else {
+          cell.classList.add("wrong");
+          setTimeout(function () { cell.classList.remove("wrong"); }, 350);
+        }
+      });
+
+      cover.addEventListener("click", function () {
+        if (state === "ready") start();
+        else if (state === "finished") reset();
+      });
+
+      document.getElementById("restart").addEventListener("click", reset);
+
+      sizeButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          sizeButtons.forEach(function (b) { b.classList.remove("active"); });
+          btn.classList.add("active");
+          size = Number(btn.dataset.size);
+          reset();
+        });
+      });
+
+      reset();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Гра на пам'ять</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="site-header"></div>
+
+  <main class="main">
+    <h1>Гра на пам'ять</h1>
+    <p>Тобі покажуть кілька чисел на кілька секунд. Запам'ятай їх і потім введи в тому порядку, в якому вони були.</p>
+
+    <!-- 1. Налаштування -->
+    <section id="viewSetup">
+      <div class="game-row">
+        <span class="game-row__label">Скільки чисел запам'ятати:</span>
+        <div class="seg" id="countSeg"></div>
+      </div>
+      <div class="game-row">
+        <span class="game-row__label">Скільки секунд дивитися:</span>
+        <div class="seg" id="timeSeg"></div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn-game" id="startBtn">Почати</button>
+      </div>
+    </section>
+
+    <!-- 2. Показ чисел -->
+    <section id="viewShow" hidden>
+      <div class="mem-title">Запам'ятовуй!</div>
+      <div class="mem-hint">Залишилось: <span id="left"></span> с</div>
+      <div class="bar"><div class="bar__fill" id="barFill"></div></div>
+      <div class="mem-cards" id="shownCards"></div>
+      <button type="button" class="btn-game btn-game--light" id="readyBtn">Запам'ятав, вводити</button>
+    </section>
+
+    <!-- 3. Введення -->
+    <section id="viewInput" hidden>
+      <div class="mem-title">Введи числа по порядку</div>
+      <div class="mem-hint">Після кожного числа натисни Enter або пробіл, щоб перейти до наступного.</div>
+      <div class="mem-inputs" id="inputs"></div>
+      <div class="btn-row">
+        <button type="button" class="btn-game" id="checkBtn">Перевірити</button>
+      </div>
+    </section>
+
+    <!-- 4. Результат -->
+    <section id="viewResult" hidden>
+      <div class="mem-title" id="resultTitle"></div>
+      <div class="mem-hint" id="resultText"></div>
+      <div class="mem-cards" id="resultCards"></div>
+      <div class="btn-row">
+        <button type="button" class="btn-game" id="againBtn">Ще раз</button>
+        <button type="button" class="btn-game btn-game--light" id="settingsBtn">Змінити налаштування</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="menu.js"></script>
+  <script>
+    (function () {
+      var COUNTS = [5, 6, 7, 8, 9, 10];
+      var TIMES = [3, 5, 7, 10, 15];
+      var count = 6, seconds = 5;
+      var numbers = [], showTimer = null;
+
+      var views = {
+        setup: document.getElementById("viewSetup"),
+        show: document.getElementById("viewShow"),
+        input: document.getElementById("viewInput"),
+        result: document.getElementById("viewResult")
+      };
+      function goTo(name) {
+        Object.keys(views).forEach(function (k) { views[k].hidden = (k !== name); });
+      }
+
+      // кнопки вибору
+      function buildSeg(id, values, current, suffix, onPick) {
+        var box = document.getElementById(id);
+        values.forEach(function (v) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.textContent = v + suffix;
+          if (v === current) b.classList.add("active");
+          b.addEventListener("click", function () {
+            box.querySelectorAll("button").forEach(function (x) { x.classList.remove("active"); });
+            b.classList.add("active");
+            onPick(v);
+          });
+          box.appendChild(b);
+        });
+      }
+      buildSeg("countSeg", COUNTS, count, "", function (v) { count = v; });
+      buildSeg("timeSeg", TIMES, seconds, " с", function (v) { seconds = v; });
+
+      // випадкові різні числа від 1 до 99
+      function pickNumbers(n) {
+        var pool = [];
+        for (var i = 1; i <= 99; i++) pool.push(i);
+        for (var j = pool.length - 1; j > 0; j--) {
+          var k = Math.floor(Math.random() * (j + 1));
+          var t = pool[j]; pool[j] = pool[k]; pool[k] = t;
+        }
+        return pool.slice(0, n);
+      }
+
+      function stopShowTimer() {
+        if (showTimer) { clearInterval(showTimer); showTimer = null; }
+      }
+
+      // ---- показ чисел ----
+      var barFill = document.getElementById("barFill");
+      var leftEl = document.getElementById("left");
+
+      function startRound() {
+        numbers = pickNumbers(count);
+
+        var cards = document.getElementById("shownCards");
+        cards.innerHTML = "";
+        numbers.forEach(function (n) {
+          var d = document.createElement("div");
+          d.className = "mem-card";
+          d.textContent = n;
+          cards.appendChild(d);
+        });
+
+        goTo("show");
+
+        // смужка часу
+        barFill.style.transition = "none";
+        barFill.style.width = "100%";
+        void barFill.offsetWidth;
+        barFill.style.transition = "width " + seconds + "s linear";
+        barFill.style.width = "0%";
+
+        var end = performance.now() + seconds * 1000;
+        leftEl.textContent = seconds;
+        stopShowTimer();
+        showTimer = setInterval(function () {
+          var rest = end - performance.now();
+          if (rest <= 0) {
+            showInput();
+          } else {
+            leftEl.textContent = Math.ceil(rest / 1000);
+          }
+        }, 100);
+      }
+
+      // ---- введення ----
+      var inputsBox = document.getElementById("inputs");
+      var inputs = [];
+
+      function showInput() {
+        stopShowTimer();
+        inputsBox.innerHTML = "";
+        inputs = [];
+
+        numbers.forEach(function (n, i) {
+          var inp = document.createElement("input");
+          inp.type = "text";
+          inp.inputMode = "numeric";
+          inp.maxLength = 2;
+          inp.autocomplete = "off";
+          inp.className = "mem-input";
+          inp.setAttribute("aria-label", "Число " + (i + 1));
+
+          inp.addEventListener("input", function () {
+            inp.value = inp.value.replace(/\D/g, "");
+            if (inp.value.length === 2 && i < numbers.length - 1) inputs[i + 1].focus();
+          });
+
+          inp.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " " || e.key === ",") {
+              e.preventDefault();
+              if (i < numbers.length - 1) inputs[i + 1].focus();
+              else check();
+            } else if (e.key === "Backspace" && inp.value === "" && i > 0) {
+              inputs[i - 1].focus();
+            }
+          });
+
+          inputsBox.appendChild(inp);
+          inputs.push(inp);
+        });
+
+        goTo("input");
+        inputs[0].focus();
+      }
+
+      // ---- перевірка ----
+      function check() {
+        var right = 0;
+        var box = document.getElementById("resultCards");
+        box.innerHTML = "";
+
+        numbers.forEach(function (n, i) {
+          var given = inputs[i].value === "" ? null : parseInt(inputs[i].value, 10);
+          var ok = given === n;
+          if (ok) right++;
+
+          var card = document.createElement("div");
+          card.className = "res-card " + (ok ? "ok" : "bad");
+          card.innerHTML = "<b>" + (given === null ? "—" : given) + "</b>" +
+                           "<small>" + (ok ? "вірно ✓" : "було " + n + " ✗") + "</small>";
+          box.appendChild(card);
+        });
+
+        var all = right === numbers.length;
+        document.getElementById("resultTitle").textContent = "Правильно: " + right + " з " + numbers.length;
+        document.getElementById("resultText").textContent = all
+          ? "Відмінна пам'ять! Спробуй більше чисел або менше часу."
+          : "Нічого страшного, пам'ять тренується. Спробуй ще раз або додай секунд.";
+
+        goTo("result");
+      }
+
+      document.getElementById("startBtn").addEventListener("click", startRound);
+      document.getElementById("readyBtn").addEventListener("click", showInput);
+      document.getElementById("checkBtn").addEventListener("click", check);
+      document.getElementById("againBtn").addEventListener("click", startRound);
+      document.getElementById("settingsBtn").addEventListener("click", function () { goTo("setup"); });
+
+      goTo("setup");
+    })();
+  </script>
+</body>
+</html>
