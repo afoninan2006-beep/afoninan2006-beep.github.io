@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Інтерактивні уроки 5–6 класи</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Додаткові стилі лише для цієї сторінки */
+    .lesson-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 20px; }
+    .lesson-meta span { background: rgba(127,127,127,.15); border-radius: 999px; padding: 4px 14px; font-size: .9rem; }
+    .lesson-table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; }
+    .lesson-table th, .lesson-table td { border: 1px solid rgba(127,127,127,.4); padding: 8px 10px; text-align: left; vertical-align: top; }
+    .lesson-table th { background: rgba(127,127,127,.15); }
+    .table-scroll { overflow-x: auto; }
+    .level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 12px 0 24px; }
+    .level-card { border: 1px solid rgba(127,127,127,.4); border-radius: 12px; padding: 16px 18px; }
+    .level-card h3 { margin-top: 0; }
+    .embed-box { margin: 12px 0 28px; }
+    .embed-box iframe { width: 100%; border: 1px solid rgba(127,127,127,.4); border-radius: 12px; }
+    .embed-actions { margin-top: 10px; }
+    .embed-actions a { display: inline-block; padding: 8px 18px; border-radius: 8px; background: #2563eb; color: #fff; text-decoration: none; font-weight: 600; }
+    .student-guide { border-left: 5px solid #2563eb; background: rgba(37,99,235,.08); border-radius: 8px; padding: 6px 20px 14px; margin: 16px 0 28px; }
+  </style>
+</head>
+<body>
+
+  <div id="site-header"></div>
+
+  <main class="main">
+    <h1>Інтерактивні уроки 5–6 класи</h1>
+
+    <div class="material-group">
+      <h2>5 клас. Комп'ютерні презентації</h2>
+      <div class="lesson-meta">
+        <span>Інформатика</span>
+        <span>5 клас</span>
+        <span>Фрагмент уроку: 20 хвилин</span>
+        <span>Два рівні складності</span>
+      </div>
+
+      <p><strong>Мета:</strong> навчитися розрізняти слайд та його об'єкти, застосовувати правила оформлення презентації й створити власну міні-презентацію.</p>
+
+      <h3>Очікувані результати</h3>
+      <ul>
+        <li>Пояснюю, що таке презентація та слайд.</li>
+        <li>Називаю об'єкти слайда: текст, зображення, таблиця, діаграма, відео, звук, гіперпосилання.</li>
+        <li>Застосовую правила оформлення слайдів.</li>
+        <li>Знаходжу й виправляю помилки в оформленні слайда.</li>
+      </ul>
+
+      <h3>План-конспект фрагмента уроку (20 хв)</h3>
+      <div class="table-scroll">
+        <table class="lesson-table">
+          <thead>
+            <tr><th>Етап</th><th>Час</th><th>Діяльність учителя</th><th>Діяльність учнів</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Мотивація</td><td>2 хв</td>
+              <td>Розповідає сюжет квесту «Врятуй презентацію», оголошує тему й очікувані результати.</td>
+              <td>Слухають, відповідають, формулюють власні очікування.</td>
+            </tr>
+            <tr>
+              <td>Пояснення нового</td><td>6 хв</td>
+              <td>Проходить із класом станції 1–3 квесту: слайд, об'єкти слайда, правила дизайну. Ставить запитання.</td>
+              <td>Слухають, відповідають, записують ключові поняття в зошит.</td>
+            </tr>
+            <tr>
+              <td>Практика за рівнями</td><td>9 хв</td>
+              <td>Допомагає обрати рівень, консультує.</td>
+              <td>Базовий: вікторина Wordwall. Поглиблений: місії 1–2 у квесті.</td>
+            </tr>
+            <tr>
+              <td>Підсумок</td><td>2 хв</td>
+              <td>Підсумовує п'ять правил оформлення.</td>
+              <td>Діляться результатами та знайденими помилками.</td>
+            </tr>
+            <tr>
+              <td>Рефлексія</td><td>1 хв</td>
+              <td>Пропонує оцінити себе, оголошує домашнє завдання.</td>
+              <td>Відповідають усно або «світлофором».</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Завдання двох рівнів</h3>
+      <div class="level-grid">
+        <div class="level-card">
+          <h3>Базовий рівень</h3>
+          <ul>
+            <li>Пройди вікторину Wordwall з 8 запитань.</li>
+            <li>Мета: щонайменше 6 правильних відповідей.</li>
+            <li>Запиши в зошит результат і одне правило оформлення, яке запам'ятав(-ла).</li>
+          </ul>
+        </div>
+        <div class="level-card">
+          <h3>Поглиблений рівень</h3>
+          <ul>
+            <li><strong>Місія 1.</strong> Знайди 5 помилок на «поганому» слайді.</li>
+            <li><strong>Місія 2.</strong> Створи презентацію з 3 слайдів «Мій улюблений гурток або хобі».</li>
+            <li><strong>★</strong> Додай гіперпосилання й анімацію.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="material-group">
+      <h2>Інтерактивні вправи</h2>
+
+      <h3>1. Вікторина «Презентація: перевір себе» (базовий рівень)</h3>
+      <div class="embed-box">
+        <!--
+          ВСТАВТЕ ТУТ КОД WORDWALL (кнопка Embed на сторінці вправи).
+          Він виглядає приблизно так, замініть ВЕСЬ рядок iframe нижче вашим кодом:
+        -->
+        <iframe src="ВСТАВТЕ_ПОСИЛАННЯ_EMBED_WORDWALL" height="500" loading="lazy" allowfullscreen title="Вікторина Wordwall: Презентація"></iframe>
+        <div class="embed-actions">
+          <a href="ВСТАВТЕ_ПОСИЛАННЯ_WORDWALL" target="_blank" rel="noopener">Відкрити в новій вкладці</a>
+        </div>
+      </div>
+
+      <h3>2. Квест «Місія: врятуй презентацію» (Genially)</h3>
+      <div class="embed-box">
+        <!--
+          ВСТАВТЕ ТУТ КОД GENIALLY (Поділитися → Embed → копіювати код).
+          Замініть ВЕСЬ рядок iframe нижче вашим кодом.
+        -->
+        <iframe src="ВСТАВТЕ_ПОСИЛАННЯ_EMBED_GENIALLY" height="560" loading="lazy" allowfullscreen title="Квест Genially: Врятуй презентацію"></iframe>
+        <div class="embed-actions">
+          <a href="ВСТАВТЕ_ПОСИЛАННЯ_GENIALLY" target="_blank" rel="noopener">Відкрити в новій вкладці</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="material-group">
+      <h2>Порадник для учня: як працювати з цими завданнями</h2>
+
+      <div class="student-guide">
+        <h3>Вдома або на уроці: вікторина Wordwall</h3>
+        <ol>
+          <li>Відкрий вікторину на цій сторінці (або за кнопкою «Відкрити в новій вкладці»).</li>
+          <li>Уважно прочитай запитання, обери одну відповідь.</li>
+          <li>Одразу побачиш, чи правильно. Запам'ятай правильну відповідь, якщо помилився(-лась).</li>
+          <li>Наприкінці запиши результат у зошит. Якщо менше 6 з 8, пройди ще раз.</li>
+        </ol>
+
+        <h3>Квест Genially</h3>
+        <ol>
+          <li>Натисни «Почати місію».</li>
+          <li>На кожній станції прочитай довідку (кнопка на слайді) і дай відповідь на запитання.</li>
+          <li>За правильну відповідь отримаєш літеру. Запиши її. Разом вийде слово <strong>СЛАЙД</strong>.</li>
+          <li>Обери місію 1 або 2 і виконай завдання. Презентацію збережи як <em>Прізвище_презентація</em>.</li>
+          <li>Покажи результат учителю.</li>
+        </ol>
+
+        <h3>Правила гарного слайда</h3>
+        <ul>
+          <li>Одна думка, один слайд.</li>
+          <li>Короткий текст: до 6 рядків, шрифт не менше 24 пт.</li>
+          <li>Хороший контраст тексту й фону.</li>
+          <li>Не більше 2–3 кольорів і 2 шрифтів.</li>
+          <li>Якісні зображення, без розтягування.</li>
+        </ul>
+
+        <h3>Якщо щось не працює</h3>
+        <p>Онови сторінку (F5), перевір Інтернет, спитай учителя. Якщо вправа не відкривається, натисни «Відкрити в новій вкладці».</p>
+      </div>
+    </div>
+
+    <div class="material-group">
+      <h2>6 клас. Графічні зображення</h2>
+      <p>Матеріали з'являться незабаром.</p>
+    </div>
+
+  </main>
+
+  <script src="menu.js"></script>
+</body>
+</html>
