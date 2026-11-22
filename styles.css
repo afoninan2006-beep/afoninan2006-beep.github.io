@@ -1821,8 +1821,8 @@ body > .layout {
   grid-column: span 2;
 }
 
-/* п'ять карток: нижній ряд по центру */
-.nav-cards .nav-card:nth-child(4) {
+/* п'ять карток: нижній ряд по центру (при шести картках не діє) */
+.nav-cards .nav-card:nth-child(4):nth-last-child(2) {
   grid-column: 2 / span 2;
 }
 
@@ -2081,11 +2081,12 @@ body > .layout {
   }
 
   .nav-cards .nav-card,
-  .nav-cards .nav-card:nth-child(4) {
+  .nav-cards .nav-card:nth-child(4):nth-last-child(2) {
     grid-column: auto;
   }
 
-  .nav-cards .nav-card:last-child {
+  /* остання картка на всю ширину, лише якщо вона лишилась без пари */
+  .nav-cards .nav-card:last-child:nth-child(odd) {
     grid-column: 1 / -1;
   }
 }
@@ -2232,5 +2233,83 @@ body > .layout {
   .nav-card:hover,
   .game-card:hover {
     transform: none;
+  }
+}
+
+
+/* ==============================
+   СТОРІНКА «ІНТЕРАКТИВНІ УРОКИ»
+   ============================== */
+
+.lesson-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 18px;
+}
+
+.lesson-meta span {
+  padding: 6px 16px;
+  color: var(--header);
+  font-size: 15px;
+  font-weight: 600;
+  background: var(--soft-blue);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 14px 0 24px;
+}
+
+.level-card {
+  padding: 20px 22px 8px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--accent);
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(45, 49, 57, .08);
+}
+
+.main .level-card h3 {
+  margin-top: 0;
+}
+
+.embed-box {
+  margin: 14px 0 30px;
+}
+
+.embed-box iframe {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(45, 49, 57, .08);
+}
+
+.embed-actions {
+  margin-top: 14px;
+}
+
+.student-guide {
+  margin: 16px 0 8px;
+  padding: 8px 26px 14px;
+  background: var(--soft-blue);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--accent);
+  border-radius: 14px;
+}
+
+@media (max-width: 700px) {
+  .level-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-guide {
+    padding: 6px 18px 12px;
   }
 }
