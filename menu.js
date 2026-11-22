@@ -54,7 +54,8 @@
 
   var inPlan = has(planPages);
   var inProgram = has(programPages);
-  var inMaterials = inPlan || inProgram || current === "materials.html";
+  var inInteractive = current === "interactive.html";
+  var inMaterials = inPlan || inProgram || inInteractive || current === "materials.html";
   var inStudentPages = has(studentPages);
   var inStudents = inStudentPages || current === "students.html";
 
@@ -105,7 +106,8 @@
   function materialsMenu() {
     return hoverMenu("Навчальні матеріали", "materials.html", inMaterials, [
       { href: "class5.1.html", text: PLAN_TITLE, active: inPlan },
-      { href: "program5-6.html", text: PROGRAM_TITLE, active: inProgram }
+      { href: "program5-6.html", text: PROGRAM_TITLE, active: inProgram },
+      { href: "interactive.html", text: "Інтерактивні уроки 5–6 класи", active: inInteractive }
     ]);
   }
 
